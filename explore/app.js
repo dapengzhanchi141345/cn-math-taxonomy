@@ -230,13 +230,15 @@
   function wantEdition() { return subject === 'math' && CC ? CC.currentEdition('math') : 'renjiao'; }
   async function loadEdition() {
     editionError = '';
-    if (wantEdition() === 'hujiao') {
+    var want = wantEdition();
+    if (want !== 'renjiao') {
       try {
-        if (!hujiaoP) hujiaoP = await Ed.load({ base: '../', version: 'hujiao', subject: 'math', stage: 'primary' });
+        if (!hujiaoP) hujiaoP = await Ed.load({ base: '../', version: want, subject: 'math', stage: 'primary' });
         P = hujiaoP;
       } catch (error) {
         P = null;
-        editionError = '沪教版册次文件加载失败，请刷新后重试（不会退回人教版册次）。';
+        editionError = (want === 'hujiao' ? '沪教版' : want === 'qingdao' ? '青岛版' : want) +
+          '册次文件加载失败，请刷新后重试（不会退回人教版册次）。';
       }
     } else P = null;
     var row = $('edition-row');
@@ -454,8 +456,8 @@
     var draft = Ed.draftNote(P);
     var shown = 0;
     var gradeNumber = parseInt(grade, 10);
-    if (gradeNumber === 6) box.append(el('p', { class: 'muted', id: 'edition-note', text: Ed.PREP_NOTE, style: 'padding:12px' }));
-    else if (gradeNumber >= 7) box.append(el('p', { class: 'muted', id: 'edition-note', text: Ed.BEYOND_PRIMARY_NOTE, style: 'padding:12px' }));
+    if (gradeNumber === 6 && wantEdition() === 'hujiao') box.append(el('p', { class: 'muted', id: 'edition-note', text: Ed.PREP_NOTE, style: 'padding:12px' }));
+    else if (gradeNumber >= 7) box.append(el('p', { class: 'muted', id: 'edition-note', text: Ed.noteFor(wantEdition(), 'beyond'), style: 'padding:12px' }));
     groups.volumes.forEach(function (volume) {
       var count = volume.units.reduce(function (sum, unit) { return sum + unit.ids.length; }, 0);
       shown += count;

@@ -375,11 +375,12 @@
   function chapterOf(t) { return PL() && !t.external ? Ed.chapterText(PL(), t) : t.chapter; }
   async function syncEdition() {
     const want = subject === 'math' ? CC.currentEdition('math') : 'renjiao';
-    if (want === 'hujiao' && !ED.P) {
-      try { ED.P = await Ed.load({ base: '../', version: 'hujiao', subject: 'math', stage: 'primary' }); }
-      catch (e) { throw new Error('沪教版册次文件加载失败，请刷新重试（不会退回人教版册次）：' + (e && e.message || e)); }
+    if (want !== 'renjiao' && !ED.P) {
+      const label = want === 'hujiao' ? '沪教版' : want === 'qingdao' ? '青岛版' : want;
+      try { ED.P = await Ed.load({ base: '../', version: want, subject: 'math', stage: 'primary' }); }
+      catch (e) { throw new Error(label + '册次文件加载失败，请刷新重试（不会退回人教版册次）：' + (e && e.message || e)); }
     }
-    ED.on = want === 'hujiao';
+    ED.on = want !== 'renjiao';
     if (D) { D.tree = buildTree(D.topics); D.uncovered = buildUncovered(D.topics); }
   }
   /* 档案里换了孩子或在本页换了册次后重算，失败时回到人教版并提示 */
@@ -838,8 +839,8 @@
   function editionCard() {
     if (subject !== 'math' || demo) return null;
     const cur = CC.current();
-    const NAMES = { renjiao: '人教版', hujiao: '沪教版' };
-    const now = ED.on ? 'hujiao' : 'renjiao';
+    const NAMES = { renjiao: '人教版', hujiao: '沪教版', qingdao: '青岛版' };
+    const now = subject === 'math' ? CC.currentEdition('math') : 'renjiao';
     return h('div', { class: 'card', id: 'edition-card' },
       h('h2', { text: '数学册次' }),
       h('p', { class: 'muted' }, '整年级、整册诊断和下面的册章列表按哪套教材的册次来分。先修回溯不受影响：答错时仍沿知识点的先修关系往前找，不看册次。'),
@@ -851,9 +852,12 @@
         }, NAMES[v]);
       })),
       h('p', { class: 'muted small', id: 'edition-hint' },
-        (now === 'hujiao'
-          ? '沪教版目前只收录小学一至五年级（' + Ed.draftNote(ED.P) + '）；还没有对照的知识点放在册章列表最底下的「' + Ed.UNCOVERED + '」，仍可以单个选为目标。六年级是初中预备年级，这一期没有册次。'
-          : '人教版：按人教版的册次（六三制）。') +
+        (now === 'renjiao'
+          ? '人教版：按人教版的册次（六三制）。'
+          : (now === 'hujiao'
+            ? '沪教版目前只收录小学一至五年级（' + Ed.draftNote(ED.P) + '）；六年级是初中预备年级，这一期没有册次。'
+            : '青岛版目前收录小学一至六年级（' + Ed.draftNote(ED.P) + '）；') +
+            '还没有对照的知识点放在册章列表最底下的「' + Ed.UNCOVERED + '」，仍可以单个选为目标。') +
         (cur ? '已保存在「' + cur.name + '」的档案里。' : '没有选孩子时，只记在这台浏览器里。')));
   }
 

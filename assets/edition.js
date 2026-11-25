@@ -12,12 +12,21 @@
 
   var RENJIAO = 'renjiao';
   var HUJIAO = 'hujiao';
-  var VERSIONS = [RENJIAO, HUJIAO];
+  var QINGDAO = 'qingdao';
+  var VERSIONS = [RENJIAO, HUJIAO, QINGDAO];
   var UNCOVERED = '该版本暂未覆盖';
   var DRAFT_NOTE = '册次依据为草稿';
   var PREP_NOTE = '沪教版的六年级是初中预备年级，小学册次未收录，这里没有六年级的册次。';
   var EMPTY_VOLUME_NOTE = '沪教版这一册暂时没有收录知识点（该版本暂未覆盖）。';
   var BEYOND_PRIMARY_NOTE = '沪教版初中、高中的册次暂未收录（一期只有小学），该版本暂未覆盖。';
+  var QD_EMPTY_NOTE = '青岛版这一册暂时没有对照的知识点（该版本暂未覆盖）。';
+  var QD_BEYOND_NOTE = '青岛版初中、高中的册次暂未收录（一期只有小学），该版本暂未覆盖。';
+  /* 按版本取文案：沪教版六年级是预备年级（空池），青岛版 1–6 年级都有正式册。 */
+  function noteFor(version, kind) {
+    if (version === HUJIAO) return kind === 'prep' ? PREP_NOTE : kind === 'empty' ? EMPTY_VOLUME_NOTE : BEYOND_PRIMARY_NOTE;
+    if (version === QINGDAO) return kind === 'empty' ? QD_EMPTY_NOTE : kind === 'beyond' ? QD_BEYOND_NOTE : '';
+    return kind === 'beyond' ? BEYOND_PRIMARY_NOTE : '';
+  }
   var NUM = ['', '一', '二', '三', '四', '五', '六'];
   var FAR = 1e12;
 
@@ -167,13 +176,13 @@
     var grade = NUM.indexOf(m[1]);
     var volumes = g ? [m[1] + '上', m[1] + '下'] : [key];
     var label = g ? m[1] + '年级' : m[1] + '年级' + (m[2] === '上' ? '上册' : '下册');
-    if (grade >= 6) return { ids: [], volumes: volumes, label: label, empty: true, reason: PREP_NOTE };
+    if (P.version === HUJIAO && grade >= 6) return { ids: [], volumes: volumes, label: label, empty: true, reason: PREP_NOTE };
     var hit = Object.keys(P.byId).filter(function (id) {
       var t = graph.byId[id];
       return t && !t.external && volumes.indexOf(P.byId[id].volume) >= 0;
     });
     var ids = sortIds(P, hit);
-    return { ids: ids, volumes: volumes, label: label, empty: !ids.length, reason: ids.length ? '' : EMPTY_VOLUME_NOTE };
+    return { ids: ids, volumes: volumes, label: label, empty: !ids.length, reason: ids.length ? '' : noteFor(P.version, 'empty') };
   }
 
   /**
@@ -207,7 +216,9 @@
   return {
     RENJIAO: RENJIAO,
     HUJIAO: HUJIAO,
+    QINGDAO: QINGDAO,
     VERSIONS: VERSIONS,
+    noteFor: noteFor,
     UNCOVERED: UNCOVERED,
     DRAFT_NOTE: DRAFT_NOTE,
     PREP_NOTE: PREP_NOTE,

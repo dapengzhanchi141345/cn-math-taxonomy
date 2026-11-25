@@ -1,5 +1,10 @@
 # 变更日志
 
+## 2026-11-25（本镜像：新增青岛版小学数学映射层）
+
+- 2026-11-25：按沪教版映射层同一架构新增「青岛版（青岛出版社）数学 · 小学」：`data/mappings/qingdao-math.json`（284 条落点，覆盖全部小学数学正式点；一上至六下 12 册目录取自教师之家教材目录站，第三方来源、草稿状态）；`assets/edition.js` 增加 qingdao 版与按版本区分的年级/文案规则（青岛版六年级是正式小学册，不是预备年级）；`assets/children.js`、`children/page.js`、`diagnose/app.js`、`explore/index.html`、`explore/app.js`、`children/history.js` 全面支持新版次切换；`scripts/validate.py` 接受 qingdao 映射并允许小学 1–6 年级；`sw.js` 预缓存新映射并升 v46；新增 `tests/test_qingdao_mapping.js` 并接入 npm test。知识点本体、先修边、题库未改；其他学科与其他版本未改。仅本镜像变更。
+
+
 ## 2026-11-25（本镜像：关于与反馈入口改指向本仓库）
 
 - 2026-11-25：全站「关于」导航链接与页脚「提交 Issue」链接、诊断页报错反馈链接（`diagnose/app.js` 的 `ISSUE_NEW_URL`）及 `tests/test_report_link.js` 断言，由上游 `xiaoyang111222/cn-math-taxonomy` 改指本仓库 `dapengzhanchi141345/cn-math-taxonomy`。README 里对上游的署名/来源链接保留（CC BY-NC 4.0 要求）。`sw.js` 升至 v45。仅本镜像变更。

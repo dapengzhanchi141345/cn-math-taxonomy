@@ -8,7 +8,7 @@
   var gradeSel = document.getElementById('f-grade');
   var bookSel = document.getElementById('f-book');
   var editionSel = document.getElementById('f-math-edition');
-  var EDITION_NAMES = { renjiao: '人教版', hujiao: '沪教版' };
+  var EDITION_NAMES = { renjiao: '人教版', hujiao: '沪教版', qingdao: '青岛版' };
   var errBox = document.getElementById('f-error');
   var submitBtn = document.getElementById('f-submit');
   var cancelBtn = document.getElementById('f-cancel');

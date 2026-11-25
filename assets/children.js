@@ -1,6 +1,6 @@
 /* 孩子档案：多个孩子、当前孩子、每个孩子的诊断记录。全部保存在本机 localStorage，不上传、不需要账号。
  * 诊断页和档案页共用。window.CnmChildren。
- * 数学册次（editions.math）：renjiao 人教版（用知识点自己的册次）或 hujiao 沪教版（用 data/mappings/hujiao-math.json 的落点）。
+ * 数学册次（editions.math）：renjiao 人教版（用知识点自己的册次）；hujiao 沪教版 / qingdao 青岛版（用 data/mappings/<版本>-math.json 的落点）。
  * 规则见 docs/hujiao-mapping-plan.md 第 3.1 节。 */
 (function () {
   'use strict';
@@ -10,9 +10,9 @@
   var MAX_RECORDS = 40;
   var MAX_BACKUP_BYTES = 10 * 1024 * 1024;
   var GRADES = ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级', '七年级', '八年级', '九年级', '高一', '高二', '高三'];
-  var TEXTBOOKS = ['人教版', '北师大版', '苏教版', '沪教版', '外研版', '译林版', '其他'];
+  var TEXTBOOKS = ['人教版', '北师大版', '苏教版', '沪教版', '青岛版', '外研版', '译林版', '其他'];
   var EDITION_SUBJECTS = ['math'];
-  var EDITIONS = ['renjiao', 'hujiao'];
+  var EDITIONS = ['renjiao', 'hujiao', 'qingdao'];
   var GUEST_EDITION_KEY = 'cnmEdition.v1';
 
   function read(k, fallback) {
@@ -57,7 +57,9 @@
     if (sub !== 'math') return EDITIONS[0];
     var e = child && child.editions;
     if (isObject(e) && EDITIONS.indexOf(e[sub]) >= 0) return e[sub];
-    return child && child.textbook === '沪教版' ? 'hujiao' : EDITIONS[0];
+    if (child && child.textbook === '沪教版') return 'hujiao';
+    if (child && child.textbook === '青岛版') return 'qingdao';
+    return EDITIONS[0];
   }
   function guestEdition(subject) {
     var v = read(GUEST_EDITION_KEY, null);

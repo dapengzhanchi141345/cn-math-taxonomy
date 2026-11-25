@@ -35,25 +35,30 @@
   function nameOf(id) { return topics && topics[id] ? topics[id].name : id; }
   /* 数学册次：当前孩子（没有孩子时看本机键）的数学册次为沪教版时，数学点的章节用映射落点，
    * 没有落点写「该版本暂未覆盖」，不显示人教 chapter；其它学科照旧。 */
-  function wantHujiao(id) {
-    if (subjectOfId(id) !== 'math') return false;
+  function editionOfMath() {
     var c = childId ? CC.get(childId) : null;
-    return (c ? CC.editionOf(c, 'math') : CC.guestEdition('math')) === 'hujiao';
+    return c ? CC.editionOf(c, 'math') : CC.guestEdition('math');
+  }
+  function wantEdition(id) {
+    if (subjectOfId(id) !== 'math') return null;
+    var v = editionOfMath();
+    return v === 'renjiao' ? null : v;
   }
   function chapterOf(id) {
     if (!topics || !topics[id]) return '';
-    if (wantHujiao(id)) return hujiaoP ? Ed.chapterText(hujiaoP, topics[id]) : '沪教版册次加载失败';
+    var ev = wantEdition(id);
+    if (ev) return hujiaoP ? Ed.chapterText(hujiaoP, topics[id]) : ev + ' 册次加载失败';
     return topics[id].chapter ? topics[id].chapter : '';
   }
   function chapterGroupOf(id) {
-    if (wantHujiao(id) && hujiaoP && topics && topics[id]) {
+    if (wantEdition(id) && hujiaoP && topics && topics[id]) {
       var p = Ed.placementOf(hujiaoP, id);
       return p ? p.volume + ' ' + p.unit : Ed.UNCOVERED;
     }
     return chapterOf(id);
   }
   function gradeKeyOf(id) {
-    if (wantHujiao(id) && hujiaoP) {
+    if (wantEdition(id) && hujiaoP) {
       var p = Ed.placementOf(hujiaoP, id);
       return p ? p.grade : 99;
     }
@@ -324,9 +329,13 @@
       topics = {};
       rows.forEach(function (t) { topics[t.id] = t; });
     }).then(function () {
-      var needHujiao = kids.some(function (c) { return CC.editionOf(c, 'math') === 'hujiao'; });
-      if (!needHujiao) return;
-      return Ed.load({ base: '../', version: 'hujiao', subject: 'math', stage: 'primary' }).then(function (P) { hujiaoP = P; }, function () { hujiaoP = null; });
+      var vers = kids.map(function (c) { return CC.editionOf(c, 'math'); }).filter(function (v) { return v !== 'renjiao'; });
+      if (!vers.length) {
+        var guest = CC.guestEdition('math');
+        if (guest === 'renjiao') return;
+        vers = [guest];
+      }
+      return Ed.load({ base: '../', version: vers[0], subject: 'math', stage: 'primary' }).then(function (P) { hujiaoP = P; }, function () { hujiaoP = null; });
     }).catch(function () { topics = null; }).then(render);
   }
   init();

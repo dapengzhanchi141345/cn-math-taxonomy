@@ -188,9 +188,11 @@ MAPPING_FILE_STATUS = ("example", "draft", "reviewed")
 # 运行时映射文件（连字符文件名，规则见 docs/hujiao-mapping-plan.md 第 2 节）：{version}-{subject}[-{stage}].json
 RT_VERSION_RE = re.compile(r"^[a-z][a-z0-9]*$")
 RT_FILE_RE = re.compile(r"^([a-z][a-z0-9]*)-([a-z]+)(?:-([a-z]+))?\.json$")
-RT_VERSIONS = ("hujiao",)
+RT_VERSIONS = ("hujiao", "qingdao")
 RT_SUBJECTS = ("math",)  # 一期只有数学；物理、英语在三期
-RT_STAGE_GRADES = {"primary": (1, 5)}  # 一期只有小学；junior 在二期，grade 6–9
+RT_STAGE_GRADES = {"primary": (1, 5)}
+# 青岛版小学有一至六年级（人教版六年级数学是小学，沪教版六年级是初中预备）
+RT_VERSION_GRADE_OVERRIDE = {("qingdao", "primary"): (1, 6)}  # 一期只有小学；junior 在二期，grade 6–9
 RT_HEAD_FIELDS = {"version", "subject", "stage", "label", "status", "source", "contributor", "note", "entries"}
 RT_ENTRY_FIELDS = {"grade", "term", "unit", "chapter", "note"}
 RT_STATUS = ("draft", "reviewed")
@@ -446,7 +448,7 @@ def check_runtime_mapping_files(ids):
     if not os.path.isdir(MAPPINGS_DIR):
         return 0, 0, stats
     n_files = n_entries = 0
-    seen_in_files = {}
+    seen = set()
     for fn in sorted(os.listdir(MAPPINGS_DIR)):
         if not fn.endswith(".json") or "-" not in fn:
             continue
@@ -509,7 +511,7 @@ def check_runtime_mapping_files(ids):
             continue
         if status == "reviewed" and not entries:
             err("%s status 为 reviewed 时 entries 至少一条" % where)
-        lo, hi = RT_STAGE_GRADES.get(stage, (1, 5))
+        lo, hi = RT_VERSION_GRADE_OVERRIDE.get((version, stage), RT_STAGE_GRADES.get(stage, (1, 5)))
         for tid, e in entries.items():
             ew = "%s entries.%s" % (where, tid)
             t = ids.get(tid)
@@ -519,9 +521,9 @@ def check_runtime_mapping_files(ids):
                 err("%s 只能对照%s正式知识点" % (ew, subject))
             elif subject == "math" and stage == "primary" and not PRIMARY_MATH_ID_RE.match(tid):
                 err("%s 小学映射只能含 cnm_p 开头的知识点" % ew)
-            if tid in seen_in_files and seen_in_files[tid] != fn:
-                err("%s 已出现在 %s，同一知识点不能跨文件重复" % (ew, seen_in_files[tid]))
-            seen_in_files.setdefault(tid, fn)
+            if tid in seen:
+                err("%s topicId 重复：%s" % (ew, tid))
+            seen.add(tid)
             if not isinstance(e, dict):
                 err("%s 必须是对象" % ew)
                 continue
