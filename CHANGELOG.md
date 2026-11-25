@@ -1,5 +1,10 @@
 # 变更日志
 
+## 2026-11-25（本镜像：关于与反馈入口改指向本仓库）
+
+- 2026-11-25：全站「关于」导航链接与页脚「提交 Issue」链接、诊断页报错反馈链接（`diagnose/app.js` 的 `ISSUE_NEW_URL`）及 `tests/test_report_link.js` 断言，由上游 `xiaoyang111222/cn-math-taxonomy` 改指本仓库 `dapengzhanchi141345/cn-math-taxonomy`。README 里对上游的署名/来源链接保留（CC BY-NC 4.0 要求）。`sw.js` 升至 v45。仅本镜像变更。
+
+
 ## 2026-11-25（本镜像：移除「学习好物」模块）
 
 - 2026-11-25：从本镜像整体移除「学习好物」推荐模块（用户要求不显示推荐清单）：删除 `goods/` 目录（index.html、goods.js、goods-data.js、goods.css）；全部 8 个页面的「学习好物」导航链接去掉；`scripts/deploy-cf.sh` 去掉 goods 拷贝；`sw.js` SHELL 缓存名单去掉 4 条 goods 条目（v43 起算，已升 v44）；`scripts/gen-kp-pages.mjs` 的主页 sitemap 清单与生成页导航去掉 `/goods/`；`tests/test_kp_pages.js` 断言同步（主要页面 7 → 6）。其他模块（诊断、图谱、档案、错题本、英语每日一句等）未改。仅本镜像变更，不回流上游。

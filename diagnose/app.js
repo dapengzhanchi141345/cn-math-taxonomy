@@ -1106,7 +1106,7 @@
     return q.answer;
   }
 
-  const ISSUE_NEW_URL = 'https://github.com/xiaoyang111222/cn-math-taxonomy/issues/new';
+  const ISSUE_NEW_URL = 'https://github.com/dapengzhanchi141345/cn-math-taxonomy/issues/new';
 
   function reportUrl(q) {
     return ISSUE_NEW_URL + '?template=question-fix.yml&title=' + encodeURIComponent('[题目] ' + q.id) +

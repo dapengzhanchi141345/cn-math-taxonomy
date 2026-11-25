@@ -14,7 +14,7 @@ assert.ok(appSrc.includes("encodeURIComponent('[题目] ' + q.id)"));
 assert.ok(appSrc.includes('encodeURIComponent(q.id)'));
 assert.ok(appSrc.includes("q.id ? h('div', { class: 'report-link no-print' }"));
 function reportUrl(q) {
-  return 'https://github.com/xiaoyang111222/cn-math-taxonomy/issues/new?template=question-fix.yml&title=' +
+  return 'https://github.com/dapengzhanchi141345/cn-math-taxonomy/issues/new?template=question-fix.yml&title=' +
     encodeURIComponent('[题目] ' + q.id) + '&question_id=' + encodeURIComponent(q.id);
 }
 const weird = 'cnm_1_q1 &x# y';
