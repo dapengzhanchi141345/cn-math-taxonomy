@@ -1,20 +1,5 @@
 # 变更日志
 
-## 2026-11-25（本镜像：新增青岛版小学数学映射层）
-
-- 2026-11-25：按沪教版映射层同一架构新增「青岛版（青岛出版社）数学 · 小学」：`data/mappings/qingdao-math.json`（284 条落点，覆盖全部小学数学正式点；一上至六下 12 册目录取自教师之家教材目录站，第三方来源、草稿状态）；`assets/edition.js` 增加 qingdao 版与按版本区分的年级/文案规则（青岛版六年级是正式小学册，不是预备年级）；`assets/children.js`、`children/page.js`、`diagnose/app.js`、`explore/index.html`、`explore/app.js`、`children/history.js` 全面支持新版次切换；`scripts/validate.py` 接受 qingdao 映射并允许小学 1–6 年级；`sw.js` 预缓存新映射并升 v46；新增 `tests/test_qingdao_mapping.js` 并接入 npm test。知识点本体、先修边、题库未改；其他学科与其他版本未改。仅本镜像变更。
-
-
-## 2026-11-25（本镜像：关于与反馈入口改指向本仓库）
-
-- 2026-11-25：全站「关于」导航链接与页脚「提交 Issue」链接、诊断页报错反馈链接（`diagnose/app.js` 的 `ISSUE_NEW_URL`）及 `tests/test_report_link.js` 断言，由上游 `xiaoyang111222/cn-math-taxonomy` 改指本仓库 `dapengzhanchi141345/cn-math-taxonomy`。README 里对上游的署名/来源链接保留（CC BY-NC 4.0 要求）。`sw.js` 升至 v45。仅本镜像变更。
-
-
-## 2026-11-25（本镜像：移除「学习好物」模块）
-
-- 2026-11-25：从本镜像整体移除「学习好物」推荐模块（用户要求不显示推荐清单）：删除 `goods/` 目录（index.html、goods.js、goods-data.js、goods.css）；全部 8 个页面的「学习好物」导航链接去掉；`scripts/deploy-cf.sh` 去掉 goods 拷贝；`sw.js` SHELL 缓存名单去掉 4 条 goods 条目（v43 起算，已升 v44）；`scripts/gen-kp-pages.mjs` 的主页 sitemap 清单与生成页导航去掉 `/goods/`；`tests/test_kp_pages.js` 断言同步（主要页面 7 → 6）。其他模块（诊断、图谱、档案、错题本、英语每日一句等）未改。仅本镜像变更，不回流上游。
-
-
 ## 2026-11-23（每周学习周报，Worker，尚未部署）
 
 - 新增 `api/digest.js`：每周一 00:00 UTC（北京 08:00）cron 触发 `sendWeeklyDigests`，给 `mail_consent = 1` 且未退订的用户发一封服务邮件。内容只来自用户自己同步的数据：第一个孩子的名字、本周新增错题（`ts` 在近 7 天）、待复测数（`api/lib.js` 的 `computeDue`，与前端 `isDue` 同规则，老条目按 `ts` + 1 天）、已毕业总数、本周诊断次数（诊断记录的 `savedAt`）、进行中的期末补漏计划（计划日期 7 天内）。四项全 0 且没有进行中的计划就不发。主题「知识图谱周报：{孩子名}有 N 道错题待复测」，N 为 0 时「知识图谱周报：本周学习小结」；正文 HTML + 纯文本，一个「去错题本复测」按钮，页脚是服务邮件说明和退订链接，不提付费产品。
