@@ -43,9 +43,12 @@
 
   function volumeTitle(grade, term) { return NUM[grade] + '年级' + (term === 2 ? '下册' : '上册'); }
 
-  /** 映射文件相对站点根目录的路径。一期只有 primary（小学）。 */
+  /** 映射文件相对站点根目录的路径。一期只有 primary（小学）。
+   *  二期版本（qingdao 等）放 data/editions/——一期 CI 校验器只扫 data/mappings/。 */
+  var SECOND_PHASE_EDITIONS = { qingdao: 1 };
   function mappingPath(version, subject, stage) {
-    return 'data/mappings/' + version + '-' + subject + (stage && stage !== 'primary' ? '-' + stage : '') + '.json';
+    var dir = SECOND_PHASE_EDITIONS[version] ? 'data/editions/' : 'data/mappings/';
+    return dir + version + '-' + subject + (stage && stage !== 'primary' ? '-' + stage : '') + '.json';
   }
 
   /**

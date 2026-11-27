@@ -5,11 +5,11 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
-const FILE = path.join(ROOT, 'data/mappings/qingdao-math.json');
+const FILE = path.join(ROOT, 'data/editions/qingdao-math.json');
 const TOPICS = path.join(ROOT, 'data/topics.json');
 let passed = 0;
 function test(name, fn) { fn(); passed++; console.log('  ok   ' + name); }
-if (!fs.existsSync(FILE)) { console.error('data/mappings/qingdao-math.json 不存在'); process.exit(1); }
+if (!fs.existsSync(FILE)) { console.error('data/editions/qingdao-math.json 不存在'); process.exit(1); }
 const raw = fs.readFileSync(FILE, 'utf8');
 const map = JSON.parse(raw);
 const topics = JSON.parse(fs.readFileSync(TOPICS, 'utf8'));
@@ -53,10 +53,10 @@ test('unit/chapter/note 与文件头文案不含「示例」「占位」', () =>
 test('sw.js 预缓存含青岛版映射，Ed.mappingPath 指向同一 URL', () => {
   const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
   const m = /var DATA = \[([\s\S]*?)\];/.exec(sw);
-  assert.ok(m && m[1].includes('data/mappings/qingdao-math.json'));
+  assert.ok(m && m[1].includes('data/editions/qingdao-math.json'));
   const Ed = require('../assets/edition.js');
   assert.ok(Ed.VERSIONS.includes('qingdao'));
-  assert.strictEqual(Ed.mappingPath(map.version, map.subject, map.stage), 'data/mappings/qingdao-math.json');
+  assert.strictEqual(Ed.mappingPath(map.version, map.subject, map.stage), 'data/editions/qingdao-math.json');
 });
 test('六年级可诊断：Ed.gradeTargets 对青岛版返回六年级目标', () => {
   const Ed = require('../assets/edition.js');
