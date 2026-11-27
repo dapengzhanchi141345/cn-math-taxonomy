@@ -27,8 +27,7 @@
   }
   function labelOf() {
     var t = current();
-    return t === 'system' ? (isDark() ? '当前：深色（跟随系统），点按切浅色' : '当前：浅色（跟随系统），点按切深色')
-      : (t === 'dark' ? '当前：深色，点按切浅色' : '当前：浅色，点按切深色');
+    return isDark() ? '当前深色 · 点按切浅色' : '当前浅色 · 点按切深色';
   }
 
   function mount() {
@@ -43,8 +42,7 @@
     if (nav) { nav.appendChild(btn); } else { header.appendChild(btn); }
 
     btn.addEventListener('click', function () {
-      var t = current();
-      var next = t === 'system' ? (isDark() ? 'light' : 'dark') : (t === 'dark' ? 'light' : 'dark');
+      var next = isDark() ? 'light' : 'dark';  // 直接切到"当前显示"的对面, 可预期
       try { localStorage.setItem(KEY, next); } catch (e) { /* 隐私模式 */ }
       apply(next);
       btn.title = labelOf();
