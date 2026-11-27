@@ -30,6 +30,9 @@ const byId = new Map(topics.map((t) => [t.id, t]));
 const SUBJECTS = ['math', 'chinese', 'science', 'morality', 'history', 'geography', 'biology', 'chemistry', 'english', 'physics', 'politics'];
 
 let log;
+  // 仓根已有 sitemap/robots 时生成器会跳过写 OUT（去重规则），临时挪开保证 OUT 完整；finally 恢复
+  const _rootFiles = ['sitemap.xml', 'robots.txt'].map((n) => path.join(ROOT, n));
+  for (const p of _rootFiles) if (fs.existsSync(p)) fs.renameSync(p, p + '.bak-kptest');
 try {
   log = execFileSync(process.execPath, [path.join(ROOT, 'scripts/gen-kp-pages.mjs'), '--out', OUT], { encoding: 'utf8' });
   const log2 = execFileSync(process.execPath, [path.join(ROOT, 'scripts/gen-kp-pages.mjs'), '--out', OUT + '-b'], { encoding: 'utf8' });
@@ -157,6 +160,7 @@ try {
     assert.match(log, new RegExp('先修边：' + deps.length + '/' + deps.length));
   });
 } finally {
+  for (const p of _rootFiles) { const _bak = p + '.bak-kptest'; if (fs.existsSync(_bak)) fs.renameSync(_bak, p); }
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.rmSync(OUT + '-b', { recursive: true, force: true });
 }

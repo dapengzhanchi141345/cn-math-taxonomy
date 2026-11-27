@@ -47,6 +47,101 @@ jobs:
       - name: CI 工作流测试
         run: node tests/test_ci_workflow.js
 
+      - name: Node 测试 test_activity
+        run: node tests/test_activity.js
+
+      - name: Node 测试 test_api
+        run: node tests/test_api.js
+
+      - name: Node 测试 test_blindspots
+        run: node tests/test_blindspots.js
+
+      - name: Node 测试 test_chapter_consistency
+        run: node tests/test_chapter_consistency.js
+
+      - name: Node 测试 test_children
+        run: node tests/test_children.js
+
+
+      - name: Node 测试 test_data_patch_batch
+        run: node tests/test_data_patch_batch.js
+
+      - name: Node 测试 test_digest
+        run: node tests/test_digest.js
+
+      - name: Node 测试 test_edition_view
+        run: node tests/test_edition_view.js
+
+      - name: Node 测试 test_engine
+        run: node tests/test_engine.js
+
+      - name: Node 测试 test_english_data
+        run: node tests/test_english_data.js
+
+      - name: Node 测试 test_english_logic
+        run: node tests/test_english_logic.js
+
+      - name: Node 测试 test_english_slowread
+        run: node tests/test_english_slowread.js
+
+      - name: Node 测试 test_english_sync
+        run: node tests/test_english_sync.js
+
+      - name: Node 测试 test_finals
+        run: node tests/test_finals.js
+
+      - name: Node 测试 test_home
+        run: node tests/test_home.js
+
+      - name: Node 测试 test_hujiao_mapping
+        run: node tests/test_hujiao_mapping.js
+
+      - name: Node 测试 test_jmor_frontend
+        run: node tests/test_jmor_frontend.js
+
+      - name: Node 测试 test_kp_pages
+        run: node tests/test_kp_pages.js
+
+      - name: Node 测试 test_login_ux
+        run: node tests/test_login_ux.js
+
+      - name: Node 测试 test_mail
+        run: node tests/test_mail.js
+
+      - name: Node 测试 test_pages_script_cache
+        run: node tests/test_pages_script_cache.js
+
+      - name: Node 测试 test_pol_hs
+        run: node tests/test_pol_hs.js
+
+      - name: Node 测试 test_qingdao_mapping
+        run: node tests/test_qingdao_mapping.js
+
+
+      - name: Node 测试 test_questions_split
+        run: node tests/test_questions_split.js
+
+      - name: Node 测试 test_report_link
+        run: node tests/test_report_link.js
+
+      - name: Node 测试 test_senior_batch
+        run: node tests/test_senior_batch.js
+
+      - name: Node 测试 test_stem_compat
+        run: node tests/test_stem_compat.js
+
+      - name: Node 测试 test_sync
+        run: node tests/test_sync.js
+
+      - name: Node 测试 test_wrongbook
+        run: node tests/test_wrongbook.js
+
+      - name: Node 测试 test_wrongbook_review
+        run: node tests/test_wrongbook_review.js
+
+      - name: Node 测试 test_zh_hs
+        run: node tests/test_zh_hs.js
+
       - name: 题目 ID 格式测试
         run: node tests/test_question_ids.js
 

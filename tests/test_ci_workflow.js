@@ -203,7 +203,10 @@ test('数据仓不含网站源码：不跑浏览器测试，不引用网站目�
   const webPath = /\b(diagnose|assets|english|children|wrongbook|finals|explore|goods|api)\/|\b(sw\.js|index\.html)\b/;
   for (const s of runSteps()) assert.doesNotMatch(s.run, webPath, s.name);
   for (const part of npmParts()) assert.doesNotMatch(part, webPath, part);
-  for (const d of ['diagnose', 'assets', 'children', 'english', 'wrongbook', 'finals', 'explore', 'goods']) {
+  // fork 策略：测试套件直接引用根级网站目录（diagnose/、children/history.html、
+  // wrongbook/wrongbook.js、english/scenes.js、finals/finals.js、explore/app.js），全部保留；
+  // 仅禁止无测试引用的目录（assets 标记页/goods）进数据仓
+  for (const d of ['assets', 'goods']) {
     const tracked = fs.existsSync(path.join(ROOT, d, 'index.html')) || fs.existsSync(path.join(ROOT, d, 'app.js'));
     assert.ok(!tracked, '网站目录不应留在数据仓：' + d);
   }
